@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>你的恋爱人格是什么？</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 27 C6 19 4 12 9 8 c3-2 6 0 7 3 c1-3 4-5 7-3 5 4 3 11-7 19z' fill='%23c2577a'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --cream:#fdf6f4;
+    --blush:#f6e7eb;
+    --rose:#c2577a;
+    --berry:#8e3b5c;
+    --gold:#c9a86a;
+    --card:#fffdfb;
+    --ink:#3d2f38;
+    --muted:#9a8790;
+    --line:#ecdde2;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(900px 500px at 90% -10%,rgba(194,87,122,.14),transparent 60%),
+      radial-gradient(700px 500px at -10% 110%,rgba(201,168,106,.14),transparent 60%),
+      linear-gradient(170deg,var(--cream),var(--blush));
+    min-height:100vh;line-height:1.7;
+  }
+  .serif{font-family:"Noto Serif SC","Songti SC","STSong","SimSun",serif;}
+  .app{max-width:480px;margin:0 auto;min-height:100vh;min-height:100dvh;padding:28px 22px 40px;display:flex;flex-direction:column;}
+  .view{display:none;flex:1;flex-direction:column;animation:fade .45s ease;}
+  .view.active{display:flex;}
+  @keyframes fade{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+
+  /* ===== 首页 ===== */
+  #view-start{justify-content:center;align-items:center;text-align:center;gap:16px;}
+  .heart-mark{
+    width:84px;height:84px;border-radius:26px;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(150deg,var(--rose),var(--berry));
+    box-shadow:0 14px 34px rgba(142,59,92,.35);margin-bottom:4px;
+  }
+  .heart-mark svg{width:42px;height:42px;}
+  #view-start h1{font-size:32px;letter-spacing:2px;color:var(--berry);font-weight:700;line-height:1.4;}
+  #view-start .sub{color:var(--muted);font-size:15px;}
+  .pill{display:inline-block;font-size:12.5px;letter-spacing:2px;color:var(--gold);border:1px solid var(--gold);border-radius:20px;padding:4px 14px;}
+  .meta-row{font-size:13px;color:var(--muted);}
+
+  .btn{
+    font-family:inherit;cursor:pointer;border:none;min-height:54px;padding:0 42px;border-radius:30px;
+    font-size:17px;letter-spacing:3px;
+    background:linear-gradient(135deg,var(--rose),var(--berry));color:#fff;font-weight:700;
+    box-shadow:0 12px 28px rgba(142,59,92,.32);transition:transform .15s ease;
+  }
+  .btn:active{transform:scale(.96);}
+
+  /* ===== 答题 ===== */
+  .progress-meta{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);letter-spacing:1px;}
+  .progress-bar{height:4px;background:rgba(142,59,92,.1);border-radius:4px;margin:12px 0 36px;overflow:hidden;}
+  .progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--rose),var(--gold));transition:width .35s ease;}
+  .topic-tag{font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:10px;}
+  .question{font-size:22px;line-height:1.55;font-weight:700;margin-bottom:32px;}
+  .options{display:flex;flex-direction:column;gap:15px;}
+  .opt{
+    font-family:inherit;cursor:pointer;text-align:left;padding:20px 22px;border-radius:16px;
+    background:var(--card);border:1.5px solid var(--line);color:var(--ink);
+    font-size:16px;line-height:1.6;min-height:60px;transition:all .18s ease;
+  }
+  .opt:active{border-color:var(--rose);background:var(--blush);transform:scale(.98);}
+
+  /* ===== 结果 ===== */
+  #view-result{justify-content:flex-start;}
+  .result-card{
+    width:100%;background:var(--card);border-radius:22px;overflow:hidden;
+    box-shadow:0 18px 48px rgba(142,59,92,.2);
+  }
+  .result-top{
+    background:linear-gradient(150deg,var(--rose),var(--berry));
+    padding:34px 26px 30px;text-align:center;color:#fff;position:relative;
+  }
+  .result-top .kicker{font-size:12.5px;letter-spacing:4px;opacity:.85;}
+  .result-top .name{font-size:34px;letter-spacing:3px;margin:8px 0 12px;font-weight:700;}
+  .result-top .slogan{font-size:16px;line-height:1.7;opacity:.96;}
+  .result-body{padding:26px 24px 28px;}
+  .result-body .desc{font-size:15.5px;color:#54454e;line-height:1.8;margin-bottom:22px;}
+  .block-title{font-size:13px;letter-spacing:2px;color:var(--gold);margin-bottom:12px;font-weight:700;}
+  .trait-list{list-style:none;margin-bottom:22px;}
+  .trait-list li{
+    position:relative;padding-left:22px;font-size:15px;color:#4d3f47;
+    line-height:1.7;margin-bottom:9px;
+  }
+  .trait-list li::before{
+    content:"";position:absolute;left:2px;top:11px;width:7px;height:7px;
+    border-radius:50%;background:var(--rose);
+  }
+  .match-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:6px;}
+  .match-box{background:var(--blush);border-radius:12px;padding:14px;}
+  .match-box .lab{font-size:12px;color:var(--berry);letter-spacing:1px;margin-bottom:4px;font-weight:700;}
+  .match-box .val{font-size:13.5px;color:#54454e;line-height:1.6;}
+  .result-actions{display:flex;flex-direction:column;gap:12px;margin-top:24px;}
+  .ghost-btn{
+    font-family:inherit;cursor:pointer;width:100%;min-height:52px;border-radius:26px;
+    background:transparent;border:1.5px solid var(--rose);color:var(--berry);
+    font-size:16px;letter-spacing:2px;font-weight:700;
+  }
+  .ghost-btn:active{background:var(--blush);}
+  .share-tip{font-size:12.5px;color:var(--muted);text-align:center;margin-top:16px;}
+
+  @media (min-width:768px){
+    .app{max-width:520px;padding:48px 24px;}
+    #view-start h1{font-size:38px;}
+    .question{font-size:24px;}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ===== 首页 ===== -->
+  <section id="view-start" class="view active">
+    <div class="heart-mark">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 20C4 14 3 9 6.5 6.5 9 4.7 11.3 6 12 7.8 12.7 6 15 4.7 17.5 6.5 21 9 20 14 12 20z" fill="#fff"/></svg>
+    </div>
+    <span class="pill">12 道题 · 约 2 分钟</span>
+    <h1 class="serif">你的恋爱人格<br>是什么？</h1>
+    <p class="sub">暧昧、聊天、吃醋、吵架……<br>看看你在爱里到底是哪一种人</p>
+    <p class="meta-row">凭第一直觉选，没有标准答案</p>
+    <button class="btn" style="margin-top:12px" onclick="startQuiz()">开始测试</button>
+  </section>
+
+  <!-- ===== 答题 ===== -->
+  <section id="view-quiz" class="view">
+    <div class="progress-meta"><span id="step-text">第 1 / 12 题</span><span>凭直觉</span></div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="topic-tag" id="topic-tag"></div>
+    <h2 class="question" id="question-text"></h2>
+    <div class="options" id="options-box"></div>
+  </section>
+
+  <!-- ===== 结果 ===== -->
+  <section id="view-result" class="view">
+    <div class="result-card">
+      <div class="result-top">
+        <div class="kicker">你的恋爱人格</div>
+        <div class="name serif" id="r-name"></div>
+        <div class="slogan serif" id="r-slogan"></div>
+      </div>
+      <div class="result-body">
+        <p class="desc" id="r-desc"></p>
+        <div class="block-title">你在爱里的样子</div>
+        <ul class="trait-list" id="r-traits"></ul>
+        <div class="match-grid">
+          <div class="match-box"><div class="lab">最适配</div><div class="val" id="r-fit"></div></div>
+          <div class="match-box"><div class="lab">要避雷</div><div class="val" id="r-avoid"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="result-actions">
+      <button class="ghost-btn" onclick="restart()">再测一次</button>
+    </div>
+    <p class="share-tip">截图这一页，发到小红书 / 朋友圈 / 微博吧</p>
+  </section>
+
+</div>
+
+<script>
+/* dim: 距离维度 clingy(黏人) / independent(独立)；风格维度 emotional(感性) / rational(理性) */
+var QUESTIONS = [
+  {topic:"依恋", q:"确定关系后，你希望两个人的相处节奏是？", a:[
+    {t:"大事小事都想分享，最好天天黏在一起", dim:"clingy"},
+    {t:"各自有各自的空间，想念但不时刻绑定", dim:"independent"}]},
+  {topic:"聊天", q:"对方半天没回消息，你会？", a:[
+    {t:"心里一直惦记，忍不住再发一条问在干嘛", dim:"clingy"},
+    {t:"知道他在忙，自己先忙自己的，看到自然会回", dim:"independent"}]},
+  {topic:"主动程度", q:"遇到喜欢的人，你通常？", a:[
+    {t:"主动找话题、约见面，喜欢就想让他知道", dim:"clingy"},
+    {t:"更习惯等对方先迈步，太主动会不好意思", dim:"independent"}]},
+  {topic:"吃醋", q:"看到对象和异性聊得很开心，你？", a:[
+    {t:"当场有点挂脸，事后一定要问清楚", dim:"clingy"},
+    {t:"表面不动声色，私下再看，不想显得小气", dim:"independent"}]},
+  {topic:"表达爱意", q:"你表达喜欢的方式更像？", a:[
+    {t:"直白热烈，“我想你”“我爱你”常挂嘴边", dim:"clingy"},
+    {t:"默默对他好，用行动和细节代替甜言蜜语", dim:"independent"}]},
+  {topic:"恋爱观", q:"你理想中的恋爱状态是？", a:[
+    {t:"两个人高度绑定，彼此是对方生活的中心", dim:"clingy"},
+    {t:"亲密但有边界，先做好自己再好好相爱", dim:"independent"}]},
+  {topic:"冲突", q:"两个人吵架时，你更容易？", a:[
+    {t:"情绪先上来，难过生气写在脸上，需要被哄", dim:"emotional"},
+    {t:"先压住情绪，讲道理分对错，想把问题解决", dim:"rational"}]},
+  {topic:"暧昧", q:"暧昧期对方忽冷忽热，你会？", a:[
+    {t:"跟着心情起伏，他一热情我就开心一整天", dim:"emotional"},
+    {t:"冷静分析他到底什么意思，不行就及时止损", dim:"rational"}]},
+  {topic:"依恋", q:"一段感情结束，你恢复的方式是？", a:[
+    {t:"需要难过一阵，找人倾诉、哭出来才好", dim:"emotional"},
+    {t:"让自己忙起来，用理性说服自己往前走", dim:"rational"}]},
+  {topic:"吃醋", q:"吃起醋来，你的内心戏是？", a:[
+    {t:"委屈难过，觉得他是不是没那么在乎我", dim:"emotional"},
+    {t:"评估这件事有没有越界，值不值得在意", dim:"rational"}]},
+  {topic:"做决定", q:"要不要在一起、要不要继续，你更靠？", a:[
+    {t:"感觉和心动，喜欢就什么都愿意", dim:"emotional"},
+    {t:"看合不合适、现实条件能不能走下去", dim:"rational"}]},
+  {topic:"表达爱意", q:"送礼物、制造惊喜，你更倾向？", a:[
+    {t:"凭心意和浪漫，想给他感动和仪式感", dim:"emotional"},
+    {t:"看他真正需要什么，送实用、不浪费的", dim:"rational"}]}
+];
+
+var RESULTS = {
+  observer:{
+    name:"清醒观察员",
+    slogan:"“我爱你，但我更爱我自己。”",
+    desc:"你在感情里始终留着一份清醒，不会因为喜欢就失去判断。心动归心动，底线归底线，你看得清套路，也守得住自己。",
+    traits:["不轻易上头，再喜欢也保留自我","吵架先讲逻辑，反感情绪化拉扯","需要大量个人空间，讨厌被黏着","一旦发现不合适，能体面抽身"],
+    fit:"成熟独立、有事说事的人",
+    avoid:"天天要安全感、靠猜相处的人"},
+  romantic:{
+    name:"慢热浪漫家",
+    slogan:"“我看起来冷淡，其实心里全是你。”",
+    desc:"你不是不爱，只是爱得慢、爱得深。表面云淡风轻，内心戏十足，认准一个人后，会把温柔和浪漫都悄悄给他。",
+    traits:["外冷内热，不擅甜言蜜语但很走心","慢热，需要时间确认安全感","感情细腻，记得住所有小细节","不轻易开始，开始就很长情"],
+    fit:"耐心稳定、愿意给你时间的人",
+    avoid:"急躁、忽冷忽热、逼你表态的人"},
+  planner:{
+    name:"高甜主理人",
+    slogan:"“我主动黏你，但每一步都很清醒。”",
+    desc:"你是恋爱里的高甜主理人，喜欢就大方表达、主动安排，热情又不失分寸。你愿意投入，但脑子清楚，不会盲目付出。",
+    traits:["主动直球，会制造浪漫和仪式感","黏人但不缠人，懂得把握节奏","有规划，在意关系能不能走长远","付出会看值不值得，不做亏本买卖"],
+    fit:"懂得回应、跟你同频互动的人",
+    avoid:"冷暴力、回避沟通、让你单向输出的人"},
+  sun:{
+    name:"赤诚小太阳",
+    slogan:"“喜欢一个人，我就想把全世界都给他。”",
+    desc:"你爱得赤诚又热烈，一旦动心就全情投入，黏人、撒娇、毫不保留。你是关系里的小太阳，温暖明亮，也容易因为太在乎而受伤。",
+    traits:["全情投入，爱憎都写在脸上","黏人又爱撒娇，需要很多回应","情绪随对方起伏，容易恋爱脑","心软好哄，给点甜就原谅一切"],
+    fit:"情绪稳定、能接住你热情的人",
+    avoid:"忽冷忽热、消耗你真心的人"}
+};
+
+var state = {index:0, score:{clingy:0,independent:0,emotional:0,rational:0}};
+
+function showView(id){
+  var views=document.querySelectorAll(".view");
+  for(var i=0;i<views.length;i++){views[i].classList.remove("active");}
+  document.getElementById(id).classList.add("active");
+}
+function startQuiz(){
+  state={index:0,score:{clingy:0,independent:0,emotional:0,rational:0}};
+  showView("view-quiz");renderQuestion();
+}
+function renderQuestion(){
+  var item=QUESTIONS[state.index];
+  document.getElementById("step-text").textContent="第 "+(state.index+1)+" / "+QUESTIONS.length+" 题";
+  document.getElementById("progress-fill").style.width=(state.index/QUESTIONS.length*100)+"%";
+  document.getElementById("topic-tag").textContent=item.topic;
+  document.getElementById("question-text").textContent=item.q;
+  var box=document.getElementById("options-box");box.innerHTML="";
+  item.a.forEach(function(opt){
+    var b=document.createElement("button");b.className="opt";b.textContent=opt.t;
+    b.onclick=function(){choose(opt.dim);};
+    box.appendChild(b);
+  });
+}
+function choose(dim){
+  state.score[dim]++;state.index++;
+  if(state.index<QUESTIONS.length){renderQuestion();}else{showResult();}
+}
+function calcResult(){
+  var s=state.score;
+  var cling=s.clingy>=s.independent;   // 平局默认黏人
+  var emo=s.emotional>=s.rational;     // 平局默认感性
+  if(!cling && !emo){return "observer";}
+  if(!cling && emo){return "romantic";}
+  if(cling && !emo){return "planner";}
+  return "sun";
+}
+function showResult(){
+  var key=calcResult(),r=RESULTS[key];
+  document.getElementById("r-name").textContent=r.name;
+  document.getElementById("r-slogan").textContent=r.slogan;
+  document.getElementById("r-desc").textContent=r.desc;
+  document.getElementById("r-fit").textContent=r.fit;
+  document.getElementById("r-avoid").textContent=r.avoid;
+  var ul=document.getElementById("r-traits");ul.innerHTML="";
+  r.traits.forEach(function(t){var li=document.createElement("li");li.textContent=t;ul.appendChild(li);});
+  showView("view-result");
+}
+function restart(){startQuiz();}
+</script>
+</body>
+</html>
+<!-- （注：内容由AI生成） -->
